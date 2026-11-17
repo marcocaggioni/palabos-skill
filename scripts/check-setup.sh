@@ -12,6 +12,7 @@ check() {  # name, command...
 }
 
 check "copilot CLI" copilot
+check "uv" uv
 check "cmake" cmake
 check "C++ compiler" g++
 check "make" make
