@@ -135,14 +135,15 @@ pattern: `MultiBlockLattice`, BGK dynamics, `BounceBack` on solid
 nodes, velocity boundary conditions on the walls
 (`setVelocityConditionOnBlockBoundaries`), `collideAndStream` loop,
 VTK output. The moving inner wall uses a velocity bounce-back with
-local wall velocity `u_wall = Omega x r`. **Status (v0.1): the C++
-case is a template following that pattern — it has not yet been
-compiled against an installed Palabos.** Before trusting any API
-name in it, compare it with the installed Palabos' own examples
-(`cavity2d`, Poiseuille, and the user guide's boundary-conditions
-chapter) and fix what differs. The `TODO (verify)` markers in the
-file say exactly which lines those are. Do not present the C++ as
-verified until it compiles and the Newtonian validation in §6 passes.
+local wall velocity `u_wall = Omega x r`. **Status: the C++ case
+has been compiled and run against Palabos master (commit 4127697,
+2026-04-03) and the Newtonian validation in §6 passes (1.43%
+analytic torque error across the sweep — see
+`examples/couette/RUN_REPORT.md`).** The moving wall is
+`VelocityBounceBack` per node with `setUwall()` updates during the
+ramp; torque is moving-wall momentum exchange at the inner-wall
+links. The API names were checked against the installed Palabos'
+own examples (`cavity2d`, Poiseuille, `computeDrag`) and sources.
 
 Non-Newtonian: implement it as a local relaxation frequency,
 `omega(x, t)` from the local shear rate via the chosen model
