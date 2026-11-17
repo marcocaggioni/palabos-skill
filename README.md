@@ -16,6 +16,8 @@ Couette example, different solver — no license seat, no GUI, no
 ```bash
 git clone https://github.com/marcocaggioni/palabos-skill.git
 cd palabos-skill
+uv sync              # Python side only (numpy, matplotlib, pyyaml)
+bash scripts/install-palabos.sh   # Palabos C++ — no PyPI package exists for it
 bash scripts/check-setup.sh
 copilot
 ```
