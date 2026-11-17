@@ -6,3 +6,8 @@ examples/couette/runs/
 examples/couette/lattice.json
 examples/couette/flow_curve.csv
 examples/couette/flow_curve.png
+examples/couette-tc/build/
+examples/couette-tc/runs/
+examples/couette-tc/lattice.json
+examples/couette-tc/flow_curve.csv
+examples/couette-tc/flow_curve.png
