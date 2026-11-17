@@ -55,13 +55,14 @@ be compared point for point.
 - `lattice.py` and `couette_post.py`: **tested in this VM** (lattice
   check passes; post-processing recovers η ≈ 1.0 Pa·s on synthetic
   torque, validation PASSED).
-- `couette.cpp`: **template, not yet compiled** against an installed
-  Palabos. It follows the showcase pattern, but the moving-wall
-  boundary and torque extraction must be pinned against the
-  installed Palabos before any run is trusted — see its
-  `TODO (verify)` markers.
-- Not yet run on a real Palabos install. Nothing here is verified
-  end-to-end until the Newtonian validation passes on a real run.
+- `couette.cpp`: **compiled and run** against Palabos master
+  (commit 4127697, 2026-04-03) on 2026-11-17. Moving wall =
+  `VelocityBounceBack` + `setUwall()` ramp; torque = moving-wall
+  momentum exchange. Full sweep validated: eta_app = 1.0143 Pa.s
+  (true 1.0), analytic torque error 1.43% at every point — see
+  `examples/couette/RUN_REPORT.md`, `flow_curve.csv/png`, and the
+  videos `couette-gamma10.mp4` / `couette-sweep.mp4`.
+- Still open: non-Newtonian fluids and 3D (2D cross-section here).
 
 ## Files
 
