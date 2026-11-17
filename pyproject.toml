@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "palabos-skill"
+version = "0.1.0"
+description = "Skill teaching an agent to run open-source Palabos lattice Boltzmann simulations from an English discussion — starting with a Couette rheometer flow curve."
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "matplotlib",
+    "pyyaml",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = []
+
+[tool.uv]
+package = false
+
+# NOTE: Palabos itself has no PyPI package — it is a C++ library, not
+# Python. `uv sync` installs the Python side of this repo only
+# (lattice conversion, sweep, post-processing, video rendering).
+# The Palabos C++ library is fetched and built separately:
+#   bash scripts/install-palabos.sh
+# That clones https://gitlab.com/unigespc/palabos.git and sets
+# PALABOS_ROOT; the Couette case is then built with cmake + make.
+# See docs/palabos-guide.md and QUICKSTART.md.
