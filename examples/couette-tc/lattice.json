@@ -1,0 +1,88 @@
+{
+  "dx_m": 0.0005000000000000001,
+  "cells_across_gap": 10,
+  "gap_m": 0.005000000000000001,
+  "eta_max_Pa_s": 70221.40943621179,
+  "gamma_dot_reg_1_s": 0.001,
+  "max_lattice_velocity": 0.1,
+  "force_conversion_N_per_lb_force_per_point": "rho*dx^4/dt^2 (dt varies)",
+  "points": {
+    "0.1": {
+      "gamma_1_s": 0.1,
+      "eta_label_Pa_s": 722.1859436211786,
+      "dt_s": 5.769520583264476e-08,
+      "n_steps": 24000,
+      "run_time_s": 0.0013846849399834743,
+      "omega_target": 1.0,
+      "omega_plug": 0.02035944019342649,
+      "u_lb": 4.154054819950423e-08,
+      "mach_ok": true
+    },
+    "0.3": {
+      "gamma_1_s": 0.3,
+      "eta_label_Pa_s": 246.16352634178722,
+      "dt_s": 1.692641768903422e-07,
+      "n_steps": 24000,
+      "run_time_s": 0.004062340245368213,
+      "omega_target": 1.0,
+      "omega_plug": 0.006986575980773408,
+      "u_lb": 3.656106220831391e-07,
+      "mach_ok": true
+    },
+    "1": {
+      "gamma_1_s": 1,
+      "eta_label_Pa_s": 77.05,
+      "dt_s": 5.407743889249407e-07,
+      "n_steps": 24000,
+      "run_time_s": 0.012978585334198578,
+      "omega_target": 1.0,
+      "omega_plug": 0.0021920821769903652,
+      "u_lb": 3.893575600259574e-06,
+      "mach_ok": true
+    },
+    "3": {
+      "gamma_1_s": 3,
+      "eta_label_Pa_s": 27.424785217660713,
+      "dt_s": 1.5193069457417168e-06,
+      "n_steps": 24000,
+      "run_time_s": 0.0364633666978012,
+      "omega_target": 1.0,
+      "omega_plug": 0.0007807897603315606,
+      "u_lb": 3.2817030028021086e-05,
+      "mach_ok": true
+    },
+    "10": {
+      "gamma_1_s": 10,
+      "eta_label_Pa_s": 9.263594362117866,
+      "dt_s": 4.49789412596222e-06,
+      "n_steps": 24000,
+      "run_time_s": 0.10794945902309327,
+      "omega_target": 1.0,
+      "omega_plug": 0.00026380480101864017,
+      "u_lb": 0.00032384837706927983,
+      "mach_ok": true
+    },
+    "30": {
+      "gamma_1_s": 30,
+      "eta_label_Pa_s": 3.661352634178721,
+      "dt_s": 1.1380129375605184e-05,
+      "n_steps": 24000,
+      "run_time_s": 0.2731231050145244,
+      "omega_target": 1.0,
+      "omega_plug": 0.00010427480080974908,
+      "u_lb": 0.0024581079451307195,
+      "mach_ok": true
+    },
+    "100": {
+      "gamma_1_s": 100,
+      "eta_label_Pa_s": 1.45,
+      "dt_s": 2.873563218390806e-05,
+      "n_steps": 24000,
+      "run_time_s": 0.6896551724137934,
+      "omega_target": 1.0,
+      "omega_plug": 4.129709361428478e-05,
+      "u_lb": 0.020689655172413803,
+      "mach_ok": true
+    }
+  }
+}
