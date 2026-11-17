@@ -32,18 +32,29 @@ cd .. && python3 couette_sweep.py --run
 python3 couette_post.py       # flow_curve.csv + flow_curve.png, validation gate
 ```
 
-## Honest status (v0.1)
+## Honest status (v0.1 — run for real, 2026-11-17)
 
-- `lattice.py`: verified in this VM — dx 0.5 mm, dt 4.17e-5 s,
-  ω = 1.0, u_lb,max = 0.030 at γ̇ = 100 s⁻¹, 24,000 steps per point.
-- `couette_post.py`: verified on synthetic torque data — recovers
-  η_app ≈ 1.0 Pa·s, analytic error ~0%, validation PASSED.
-- `couette.cpp`: **not yet compiled.** It follows the Palabos
-  showcase pattern, but the moving-wall boundary and the torque
-  extraction (`computeInnerTorque`) must be pinned against the
-  installed Palabos before any run is trusted. The `TODO (verify)`
-  markers say exactly where. Until the Newtonian validation passes
-  on a real run, do not use this for a non-Newtonian flow curve.
+- `lattice.py`: verified — dx 0.5 mm, dt 4.17e-5 s, omega = 1.0,
+  u_lb,max = 0.030 at shear rate 100 1/s, 24,000 steps per point.
+- `couette.cpp`: **compiled and run** against Palabos master
+  (commit 4127697, 2026-04-03). Moving inner wall =
+  `VelocityBounceBack` per node with a `setUwall()` ramp; torque =
+  moving-wall momentum exchange at inner-wall links (see
+  `RUN_REPORT.md` for the API references and the two bugs found
+  on the way: a dangling dynamics pointer, and a 2D torque
+  conversion that must use rho*dx^4/dt^2, not dx^5).
+- **Newtonian validation PASSED on a real run**: full sweep
+  shear rate 0.1 -> 100 1/s, eta_app = 1.0143 Pa.s at every point
+  (true 1.0), analytic torque error 1.43% at every point — see
+  `flow_curve.csv`, `flow_curve.png`, `RUN_REPORT.md`.
+- Videos: `couette-gamma10.mp4` (spin-up at shear rate 10 1/s),
+  `couette-sweep.mp4` (steady state across the sweep) — rendered
+  from the field snapshots in `runs/` by `make_video.py`.
+- Still unverified: non-Newtonian fluids (no model implemented
+  yet — Newtonian only), 3D (2D cross-section here), and the
+  profile-derived torque, which reads ~9% low (staircase-wall
+  effect on the near-wall velocity gradient; the momentum-exchange
+  torque is the primary measurement).
 
 ## Analytic check
 
