@@ -1,0 +1,82 @@
+# Couette rheometer — Palabos three-component (TC) case.
+# Same geometry and sweep as the Newtonian example in
+# examples/couette/case.yaml, so the two can be compared point for point.
+# Everything here is a labelled default: confirm before running.
+
+geometry:
+  R_i: 0.020        # m, rotating inner cylinder (bob)
+  R_o: 0.025        # m, fixed outer cylinder (cup)
+  L: 0.060          # m, wetted length (3D torque = torque-per-length * L)
+  axis: Z
+  dimension: 2D     # 2D annulus cross-section, torque per unit length.
+                    # 3D is a follow-up; it adds end effects and ~100x cost.
+
+fluid:
+  model: three_component   # TC law (Marco, 2026-11-17, voice):
+                           #   tau = sigma_y + sigma_y*sqrt(gamma_dot/gamma_dot_c)
+                           #         + eta_bg*gamma_dot
+  sigma_y_Pa: 70.0
+  gamma_dot_c_1_s: 100.0
+  eta_bg_Pa_s: 0.05        # 50 cP
+  rho_kg_m3: 1000.0
+  # Regularization (REQUIRED — the TC apparent viscosity
+  #   eta(gamma_dot) = sigma_y/gamma_dot + sigma_y/sqrt(gamma_dot*gamma_dot_c)
+  #                    + eta_bg
+  # diverges as gamma_dot -> 0, so the unyielded plug would need
+  # infinite viscosity):
+  #   eta = min(eta(gamma_dot), eta_max),
+  #   eta_max = eta(gamma_dot_reg), gamma_dot_reg = 1e-3 1/s,
+  #   eta_max = 7.0221e4 Pa s. The plug then creeps at ~tau/eta_max
+  #   instead of being exactly rigid; the torque is set by the yielded
+  #   region and is insensitive to the exact cap (the cap only has to
+  #   be >> the yielded viscosity, ~1–700 Pa s).
+  gamma_dot_reg_1_s: 0.001
+  eta_max_Pa_s: 70221.4    # eta(1e-3 1/s); computed by lattice.py, not typed in
+
+sweep:
+  shear_rate_1_s: [0.1, 0.3, 1, 3, 10, 30, 100]   # log-spaced; labels use
+                    # the Newtonian inner-wall-rate convention,
+                    # Omega = gamma*(Ro^2-Ri^2)/(2*Ro^2)
+  n_steps_per_point: 24000   # fixed step count per point (NOT a fixed
+                    # physical run time — see lattice). 24,000 steps is
+                    # ~40 viscous diffusion times at the label viscosity
+                    # and ~4 diffusion times across the lowest-viscosity
+                    # yielded zone; the steady window is the last 20%.
+  ramp_fraction: 0.2         # quarter-sine ramp of Omega over the first
+                    # 20% of the steps, avoids a start-up shock
+  steady_window_fraction: 0.2   # average torque over the last 20% of the run
+  initial_condition: rest   # equilibrium, u = 0 everywhere. The Newtonian
+                    # case starts from the analytic profile; for TC the
+                    # profile is not a closed form, so the run spins up
+                    # from rest under the ramp instead.
+
+lattice:
+  cells_across_gap: 10   # dx = gap / 10 = 0.5 mm, as in the Newtonian case
+  omega_target: 1.0      # relaxation frequency AT THE LABEL VISCOSITY
+                    # (see below); dt is solved from this per point
+  max_lattice_velocity: 0.1   # hard check: u_lb at the highest shear rate
+                    # must stay below this
+  mpi_ranks: 1
+  # Per-point dt (lattice.py computes this table; the C++ case recomputes
+  # the same numbers from gamma — the two must agree):
+  #   eta at the label rate, eta_label = sigma_y/gamma
+  #     + sigma_y/sqrt(gamma*gamma_dot_c) + eta_bg, sets dt via
+  #     dt = nu_lb*dx^2/(eta_label/rho), nu_lb = (1/omega_target-0.5)/3.
+  #   gamma=0.1:  eta_label=722.19 Pa s, dt=5.77e-8 s, run time 1.38e-3 s
+  #   gamma=0.3:  eta_label=246.16 Pa s, dt=1.69e-7 s, run time 4.06e-3 s
+  #   gamma=1:    eta_label=77.05 Pa s,  dt=5.41e-7 s, run time 1.30e-2 s
+  #   gamma=3:    eta_label=27.42 Pa s,  dt=1.52e-6 s, run time 3.65e-2 s
+  #   gamma=10:   eta_label=9.26 Pa s,   dt=4.50e-6 s, run time 1.08e-1 s
+  #   gamma=30:   eta_label=3.66 Pa s,   dt=1.14e-5 s, run time 2.73e-1 s
+  #   gamma=100:  eta_label=1.45 Pa s,   dt=2.87e-5 s, run time 6.90e-1 s
+  #   A single dt cannot serve the whole sweep: eta spans ~1.5 to ~722
+  #   Pa s, so a dt that keeps omega~1 at gamma=100 would give
+  #   omega~0.002 at gamma=0.1 (frozen) and vice versa. Local omega in
+  #   the run then spans from ~1.8 in the yielded zone near the bob
+  #   down to ~0.02–0.00004 in the capped plug (eta_max); that low end
+  #   is the plug behaving as a near-solid, which is the intent, not
+  #   an instability — see RUN_REPORT.md. u_lb,max = 0.021 (gamma=100).
+
+run:
+  dry_run: true   # default: lattice params + build only, no solver run
+  palabos_dir: ~/palabos   # where `git clone https://gitlab.com/unigespc/palabos.git` lives
