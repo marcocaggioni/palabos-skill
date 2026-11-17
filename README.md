@@ -50,6 +50,28 @@ gap. 2D cross-section first (torque per unit length); 3D is a
 follow-up. Same numbers as the M-Star example, so the solvers can
 be compared point for point.
 
+## Results — it ran
+
+<video src="https://raw.githubusercontent.com/marcocaggioni/palabos-skill/main/examples/couette/couette-sweep.mp4" controls></video>
+
+Steady state at each shear rate, γ̇ = 0.1 → 100 s⁻¹. The spin-up at γ̇ = 10 s⁻¹ is in [couette-gamma10.mp4](examples/couette/couette-gamma10.mp4).
+
+![Flow curve](examples/couette/flow_curve.png)
+
+Newtonian validation **PASSED**: max analytic-torque error **1.43%**, η_app = 1.0143 Pa·s (true 1.0), constant across the sweep — a systematic staircase-wall bias. Full numbers in [examples/couette/RUN_REPORT.md](examples/couette/RUN_REPORT.md).
+
+## How this compares
+
+Same Couette case, same validation, five solvers. Full write-up: [docs/comparison.md](docs/comparison.md).
+
+| Solver | Method | Repo | Validation (max error) | η_app | Sweep video |
+|---|---|---|---|---|---|
+| M-Star | LBM, GPU, licensed | [mstar-skill](https://github.com/marcocaggioni/mstar-skill) (private) | not yet run | — | — |
+| Palabos | LBM, C++/MPI, AGPLv3 | [palabos-skill](https://github.com/marcocaggioni/palabos-skill) | 1.43% | 1.0143 | [video](https://github.com/marcocaggioni/palabos-skill/blob/main/examples/couette/couette-sweep.mp4) |
+| XLB | LBM, Python/JAX | [xlb-skill](https://github.com/marcocaggioni/xlb-skill) | 1.16% | 0.988–1.000 | [video](https://github.com/marcocaggioni/xlb-skill/blob/main/examples/couette/couette-sweep.mp4) |
+| OpenFOAM | Finite-volume, GPL | [openfoam-skill](https://github.com/marcocaggioni/openfoam-skill) | 0.03% | 1.0003 | [video](https://github.com/marcocaggioni/openfoam-skill/blob/main/examples/couette/couette-sweep.mp4) |
+| OpenLB | LBM, C++/CUDA, GPLv2 | [openlb-skill](https://github.com/marcocaggioni/openlb-skill) | running | — | — |
+
 ## Status — v0.1
 
 - `lattice.py` and `couette_post.py`: **tested in this VM** (lattice
