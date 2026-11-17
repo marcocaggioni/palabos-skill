@@ -60,6 +60,37 @@ Steady state at each shear rate, γ̇ = 0.1 → 100 s⁻¹. The spin-up at γ̇ 
 
 Newtonian validation **PASSED**: max analytic-torque error **1.43%**, η_app = 1.0143 Pa·s (true 1.0), constant across the sweep — a systematic staircase-wall bias. Full numbers in [examples/couette/RUN_REPORT.md](examples/couette/RUN_REPORT.md).
 
+## The TC Couette example
+
+Same geometry and sweep, three-component (TC) fluid instead of
+Newtonian: τ = σ_y + σ_y√(γ̇/γ̇_c) + η_bg·γ̇ with σ_y = 70 Pa,
+γ̇_c = 100 s⁻¹, η_bg = 0.05 Pa·s (50 cP). TC rheology in Palabos
+means a local relaxation frequency from the local strain rate
+(`TCBGKdynamics`, modelled on Palabos' own `BGKCarreauDynamics`),
+with the viscosity capped at η_max = η(10⁻³ s⁻¹) = 7.0221e4 Pa·s
+so the unyielded plug is regularized. Because η at the label rate
+spans 722 Pa·s (γ̇ = 0.1) down to 1.45 Pa·s (γ̇ = 100), dt is
+solved per point at ω = 1.0.
+
+<video src="https://raw.githubusercontent.com/marcocaggioni/palabos-skill/main/examples/couette-tc/couette-tc-sweep.mp4" controls></video>
+
+Steady state at each shear rate, γ̇ = 0.1 → 100 s⁻¹. The spin-up at γ̇ = 10 s⁻¹ is in [couette-tc-gamma10.mp4](examples/couette-tc/couette-tc-gamma10.mp4).
+
+![TC flow curve](examples/couette-tc/flow_curve.png)
+
+TC validation **PASSED**: max analytic-torque error **3.80%** (at
+γ̇ = 0.1, where the yielded zone is only ~2 cells wide), falling to
+0.66% at γ̇ = 100 — a systematic positive bias, same staircase-wall
+character as the Newtonian +1.43%. At γ̇ ≤ 10 part of the gap is a
+genuine unyielded plug attached to the outer wall (R_y = 21.03 mm
+at γ̇ = 0.1 up to 24.84 mm at γ̇ = 10); γ̇ ≥ 30 is fully yielded.
+Full numbers in [examples/couette-tc/RUN_REPORT.md](examples/couette-tc/RUN_REPORT.md),
+code and per-point lattice table in [examples/couette-tc/](examples/couette-tc/).
+Caveat: the velocity profile reads high vs analytic (up to ~30%
+mid-gap at γ̇ = 10) — the flat TC law amplifies a ~1% stress error
+into a large shear-rate error at this resolution; the torque (the
+validated quantity) is unaffected. See the run report.
+
 ## How this compares
 
 Same Couette case, same validation, five solvers. Full write-up: [docs/comparison.md](docs/comparison.md).
@@ -84,13 +115,24 @@ Same Couette case, same validation, five solvers. Full write-up: [docs/compariso
   (true 1.0), analytic torque error 1.43% at every point — see
   `examples/couette/RUN_REPORT.md`, `flow_curve.csv/png`, and the
   videos `couette-gamma10.mp4` / `couette-sweep.mp4`.
-- Still open: non-Newtonian fluids and 3D (2D cross-section here).
+- TC fluid (`examples/couette-tc/`): **compiled and run**
+  2026-11-17. `TCBGKdynamics` (local omega from the TC law via
+  Π^neq, after Palabos' own `BGKCarreauDynamics`); per-point dt
+  from the label viscosity; viscosity cap η_max = 7.0221e4 Pa·s.
+  Full sweep validated against the analytic TC torque: max error
+  3.80% (γ̇ = 0.1) down to 0.66% (γ̇ = 100) — see
+  `examples/couette-tc/RUN_REPORT.md`, `flow_curve.csv/png`, and
+  the videos `couette-tc-gamma10.mp4` / `couette-tc-sweep.mp4`.
+- Still open: 3D (2D cross-section here) and finer resolution
+  (the TC velocity profile suggests 10 cells/gap is coarse for
+  this fluid — see `examples/couette-tc/RUN_REPORT.md`).
 
 ## Files
 
 - `skills/palabos-simulation/SKILL.md` — the skill, mirrored at `.github/skills/palabos-simulation/SKILL.md`
 - `docs/palabos-guide.md` — install, build, lattice units, non-Newtonian notes, limits
-- `examples/couette/` — the worked example
+- `examples/couette/` — the worked Newtonian example
+- `examples/couette-tc/` — the worked TC-fluid example
 - `scripts/check-setup.sh` — readiness check (copilot, cmake, g++, MPI, Palabos)
 
 Palabos: https://palabos.unige.ch — https://gitlab.com/unigespc/palabos (AGPLv3).
