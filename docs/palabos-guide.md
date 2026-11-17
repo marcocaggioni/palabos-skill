@@ -67,7 +67,9 @@ other way round.
 ## Limits (v0.1)
 
 - No shipped Taylor-Couette example in Palabos — the Couette case
-  here is written from the showcase pattern, not copied.
+  here is written from the showcase pattern, not copied. It has
+  since been compiled, run, and validated (Newtonian, 1.43% torque
+  error — see examples/couette/RUN_REPORT.md).
 - Post-processing is your own code (this repo's `couette_post.py`)
   or ParaView on the VTK output.
 - GPU support is pre-release; the v0.1 path is CPU + MPI.
